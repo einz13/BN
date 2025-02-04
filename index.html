@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BottleNexus Checkout Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      label, input, button {
+        font-size: 1rem;
+      }
+      input {
+        margin-right: 10px;
+        padding: 5px;
+      }
+      button {
+        padding: 6px 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>BottleNexus Checkout</h2>
+    <label for="productId">Product ID:</label>
+    <input type="text" id="productId" placeholder="Enter product ID" value="4572" />
+    <button id="checkoutBtn">Add to Cart & Checkout</button>
+
+    <script>
+      (async function () {
+        // === Configuration ===
+        const config = {
+          token: "b1ef889a-6b98-11ef-9e5f-0242ac110002",
+          options: {
+            // Additional options can be added here.
+          },
+        };
+
+        // Base API URLs
+        const API_BASE = "https://api.bottlenexus.com/";
+        const CHECKOUT_BASE = "https://checkout.bottlenexus.com/";
+
+        // === Helper: Build headers ===
+        async function getHeaders() {
+          return {
+            "Content-Type": "application/json",
+            "Authorization": config.token,
+          };
+        }
+
+        // === Function: Create a new checkout session ===
+        async function createCheckout() {
+          // Build any metadata you need; here it's an empty object.
+          const metadata = {};
+          const options = config.options || {};
+
+          const response = await fetch(API_BASE + "api/v1/buy-button/create/", {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: await getHeaders(),
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify({ metadata, options }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to create checkout: " + response.status);
+          }
+
+          const data = await response.json();
+          if (!data.checkout_id) {
+            throw new Error("Response did not contain a checkout_id");
+          }
+          return data.checkout_id;
+        }
+
+        // === Function: Add a product to the checkout ===
+        async function createProduct(productId, quantity = 1, recurrence = "one-time") {
+          // Try to reuse an existing checkout from localStorage if available.
+          let checkoutId = localStorage.getItem("checkoutId");
+          if (!checkoutId) {
+            checkoutId = await createCheckout();
+            localStorage.setItem("checkoutId", checkoutId);
+          }
+          // Build the payload for adding the product.
+          const payload = {
+            quantity,
+            recurrence,
+            engraving_lines: null, // Change if engraving details are needed.
+          };
+
+          const url = API_BASE + `api/v1/buy-button/${checkoutId}/${productId}/create/`;
+          const response = await fetch(url, {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: await getHeaders(),
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to add product: " + response.status);
+          }
+          const data = await response.json();
+          return data;
+        }
+
+        // === Main Handler: Called when the button is clicked ===
+        async function handleCheckout() {
+          // Get the product ID entered by the user
+          const productInput = document.getElementById("productId");
+          const productId = productInput.value.trim();
+          if (!productId) {
+            alert("Please enter a product ID.");
+            return;
+          }
+
+          try {
+            // Step 1. Create a new checkout session.
+            const checkoutId = await createCheckout();
+            console.log("Checkout created with id:", checkoutId);
+            localStorage.setItem("checkoutId", checkoutId);
+
+            // Step 2. Add the product (from the input field) to the checkout.
+            const addProductResponse = await createProduct(productId, 1, "one-time");
+            console.log("Product added to checkout:", addProductResponse);
+
+            // Step 3. Build the checkout URL and open it in a new tab.
+            const checkoutUrl = CHECKOUT_BASE + "checkout/" + checkoutId + "/";
+            console.log("Opening checkout URL:", checkoutUrl);
+            window.open(checkoutUrl, "_blank");
+          } catch (error) {
+            console.error("Error during checkout process:", error);
+            alert("Error: " + error.message);
+          }
+        }
+
+        // === Attach the event listener to the checkout button ===
+        document
+          .getElementById("checkoutBtn")
+          .addEventListener("click", handleCheckout);
+      })();
+    </script>
+  </body>
+</html>
