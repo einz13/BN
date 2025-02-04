@@ -2,18 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>BottleNexus API Checkout</title>
+    <title>BottleNexus Checkout Test</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         margin: 20px;
       }
-      label, select, button {
+      label, input, button {
         font-size: 1rem;
       }
-      select {
-        padding: 5px;
+      input {
         margin-right: 10px;
+        padding: 5px;
       }
       button {
         padding: 6px 12px;
@@ -21,12 +21,10 @@
     </style>
   </head>
   <body>
-    <h2>Dettling Store Checkout Hack</h2>
-    <label for="productSelect">Choose a product:</label>
-    <select id="productSelect">
-      <!-- Options will be inserted here -->
-    </select>
-    <button id="checkoutBtn">Checkout</button>
+    <h2>BottleNexus Checkout</h2>
+    <label for="productId">Product ID:</label>
+    <input type="text" id="productId" placeholder="Enter product ID" value="4572" />
+    <button id="checkoutBtn">Add to Cart & Checkout</button>
 
     <script>
       (async function () {
@@ -34,7 +32,7 @@
         const config = {
           token: "b1ef889a-6b98-11ef-9e5f-0242ac110002",
           options: {
-            // Additional options if needed
+            // Additional options can be added here.
           },
         };
 
@@ -42,7 +40,7 @@
         const API_BASE = "https://api.bottlenexus.com/";
         const CHECKOUT_BASE = "https://checkout.bottlenexus.com/";
 
-        // === Helper: Build request headers ===
+        // === Helper: Build headers ===
         async function getHeaders() {
           return {
             "Content-Type": "application/json",
@@ -50,9 +48,10 @@
           };
         }
 
-        // === API Function: Create a new checkout session ===
+        // === Function: Create a new checkout session ===
         async function createCheckout() {
-          const metadata = {}; // Extend if you need to send metadata
+          // Build any metadata you need; here it's an empty object.
+          const metadata = {};
           const options = config.options || {};
 
           const response = await fetch(API_BASE + "api/v1/buy-button/create/", {
@@ -69,6 +68,7 @@
           if (!response.ok) {
             throw new Error("Failed to create checkout: " + response.status);
           }
+
           const data = await response.json();
           if (!data.checkout_id) {
             throw new Error("Response did not contain a checkout_id");
@@ -76,18 +76,19 @@
           return data.checkout_id;
         }
 
-        // === API Function: Add a product to the checkout ===
+        // === Function: Add a product to the checkout ===
         async function createProduct(productId, quantity = 1, recurrence = "one-time") {
-          // Reuse an existing checkout id from localStorage if available
+          // Try to reuse an existing checkout from localStorage if available.
           let checkoutId = localStorage.getItem("checkoutId");
           if (!checkoutId) {
             checkoutId = await createCheckout();
             localStorage.setItem("checkoutId", checkoutId);
           }
+          // Build the payload for adding the product.
           const payload = {
             quantity,
             recurrence,
-            engraving_lines: null, // Change this if engraving details are needed
+            engraving_lines: null, // Change if engraving details are needed.
           };
 
           const url = API_BASE + `api/v1/buy-button/${checkoutId}/${productId}/create/`;
@@ -109,84 +110,27 @@
           return data;
         }
 
-        // === API Function: Fetch product details for given product IDs ===
-        async function getProducts(token, productIdArray) {
-          try {
-            const requestOptions = {
-              method: "POST",
-              mode: "cors",
-              cache: "no-cache",
-              credentials: "same-origin",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": token,
-              },
-              redirect: "follow",
-              referrerPolicy: "no-referrer",
-              body: JSON.stringify({ products: productIdArray }),
-            };
-            const response = await fetch(API_BASE + "api/v1/buy-button/products/", requestOptions);
-            if (response.status === 200) {
-              return await response.json();
-            }
-          } catch (err) {
-            console.error("Error in getProducts:", err);
-          }
-          return null;
-        }
-
-        // === Function: Load products and populate the dropdown ===
-        async function loadProducts() {
-          // Attempt to get product IDs from a global object; if not available, use a fallback default list.
-          let productIds = [];
-          if (window.bnx && window.bnx.products) {
-            // Filter out any non-product keys (for example, "brand")
-            productIds = Object.keys(window.bnx.products).filter(
-              (id) => id && id !== "brand"
-            );
-          } else {
-            // Fallback default product IDs; adjust as needed.
-            productIds = ["4572", "1234", "2345"];
-          }
-
-          // Fetch the product details
-          const productsData = await getProducts(config.token, productIds);
-          if (!productsData) {
-            console.error("No products data returned.");
-            return;
-          }
-          // Assume productsData is an object where keys are product IDs and values are product details.
-          const selectElem = document.getElementById("productSelect");
-          selectElem.innerHTML = ""; // Clear any existing options
-          for (const id of productIds) {
-            // Use a default label if the product detail is missing.
-            const label = productsData[id] && productsData[id].name
-              ? productsData[id].name
-              : "Product " + id;
-            const option = document.createElement("option");
-            option.value = id;
-            option.textContent = label;
-            selectElem.appendChild(option);
-          }
-        }
-
-        // === Handler: When the Checkout button is clicked ===
+        // === Main Handler: Called when the button is clicked ===
         async function handleCheckout() {
-          const selectElem = document.getElementById("productSelect");
-          const productId = selectElem.value;
+          // Get the product ID entered by the user
+          const productInput = document.getElementById("productId");
+          const productId = productInput.value.trim();
           if (!productId) {
-            alert("Please select a product.");
+            alert("Please enter a product ID.");
             return;
           }
+
           try {
-            // Create a new checkout session (even if one exists, for a fresh start)
+            // Step 1. Create a new checkout session.
             const checkoutId = await createCheckout();
             console.log("Checkout created with id:", checkoutId);
             localStorage.setItem("checkoutId", checkoutId);
-            // Add the selected product to the checkout
+
+            // Step 2. Add the product (from the input field) to the checkout.
             const addProductResponse = await createProduct(productId, 1, "one-time");
             console.log("Product added to checkout:", addProductResponse);
-            // Build the checkout URL and open it in a new tab
+
+            // Step 3. Build the checkout URL and open it in a new tab.
             const checkoutUrl = CHECKOUT_BASE + "checkout/" + checkoutId + "/";
             console.log("Opening checkout URL:", checkoutUrl);
             window.open(checkoutUrl, "_blank");
@@ -196,13 +140,10 @@
           }
         }
 
-        // === Setup event listeners ===
+        // === Attach the event listener to the checkout button ===
         document
           .getElementById("checkoutBtn")
           .addEventListener("click", handleCheckout);
-
-        // Load products when the page loads
-        await loadProducts();
       })();
     </script>
   </body>
