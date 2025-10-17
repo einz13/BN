@@ -1,130 +1,508 @@
+
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>BottleNexus Checkout Test</title>
-    <style>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+  
+
+  <title>Dettling</title>
+
+    <link rel="canonical" href="https://codepen.io/chalavacs/pen/yyepNpp">
+  
+  
+  
+  
+<style>
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+        font-family: "orpheus-pro", Georgia, serif;
+        padding: 20px;
+        background-color: #fafafa;
       }
-      label, input, button {
-        font-size: 1rem;
+
+      .grid-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
       }
-      input {
-        margin-right: 10px;
-        padding: 5px;
+
+      .grid-item {
+        flex: 1 1 calc(50% - 15px);
+        min-width: 300px;
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
-      button {
-        padding: 6px 12px;
+
+      .grid-item h4 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
       }
-    </style>
-  </head>
-  <body>
-    <h2>BottleNexus Checkout</h2>
-    <label for="productId">Product ID:</label>
-    <input type="text" id="productId" placeholder="Enter product ID" value="8740" />
-    <button id="checkoutBtn">Add to Cart & Checkout</button>
 
-    <script>
-      (async function () {
-        const config = {
-          token: "b1ef889a-6b98-11ef-9e5f-0242ac110002",
-          options: {},
-        };
-
-        const API_BASE = "https://api.bottlenexus.com/";
-        const CHECKOUT_BASE = "https://checkout.bottlenexus.com/";
-
-        async function getHeaders() {
-          return {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${config.token}`,
-          };
+      @media (max-width: 768px) {
+        .grid-item {
+          flex: 1 1 100%;
         }
+      }
+</style>
 
-        async function validateCheckout(checkoutId) {
-          try {
-            const response = await fetch(API_BASE + "api/v1/checkout/" + checkoutId + "/", {
-              headers: await getHeaders(),
-            });
-            return response.ok;
-          } catch {
-            return false;
-          }
-        }
+  <script>
+  window.console = window.console || function(t) {};
+</script>
 
-        async function createCheckout() {
-          const metadata = {};
-          const options = config.options || {};
+  
+  
+</head>
 
-          const response = await fetch(API_BASE + "api/v1/checkout/create/", {
-            method: "POST",
-            headers: await getHeaders(),
-            body: JSON.stringify({ metadata, options }),
-          });
+<body translate="no">
+  <div class="grid-container">
+      <div class="grid-item">
+        <h4>Gold Wax</h4>
+        <div class="sqs-block-content">
+          <script type="text/javascript">
+            (function (currentScript) {
+              window.BottleNexus ? BottleNexusInit() : loadScript();
+              function loadScript() {
+                var script = document.createElement("script");
+                script.async = true;
+                script.src =
+                  "https://buybutton.bottlenexus.com/buybutton.min.js?v=1717439338479";
+                (
+                  document.getElementsByTagName("head")[0] ||
+                  document.getElementsByTagName("body")[0]
+                ).appendChild(script);
+                script.onload = BottleNexusInit;
+              }
+              function BottleNexusInit() {
+                BottleNexus.init().createComponent({
+                  currentScript: currentScript,
+                  token: "b1ef889a-6b98-11ef-9e5f-0242ac110002",
+                  id: 8741,
+                  options: {
+                    iframe: false,
+                    layout: "basic",
+                    behavior: "sidebar",
+                    buttonRadius: "0",
+                    buttonFontSize: 16,
+                    buttonWidth: 300,
+                    buttonAlignment: "center",
+                    buttonText: "Buy Now",
+                    buttonTextColor: "#000000ff",
+                    buttonBackground: "#f5f5f5ff",
+                    initialQuantity: 1,
+                    cartButtonRadius: 0,
+                    cartCheckoutBackgroundColor: "#000000ff",
+                    cartCheckoutBackgroundDisabledColor: "#B2B2B2FF",
+                    cartCheckoutTextColor: "#FFFFFFFF",
+                    cartHeadingText: "Cart",
+                    cartCheckoutText: "Checkout",
+                    cartEmptyText: "No products added",
+                    cartAdditionalInformationText: "",
+                    cartBackgroundColor: "#FEFEFEFF",
+                    cartTextColor: "#000000FF",
+                    showInput: true,
+                    utm: {
+                      source: "BuyButton",
+                    },
+                    styles: {
+                      "[data-component='button']": {
+                        "background-color": "#f5f5f5",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='button']:hover": {
+                        "background-color": "#D7D5D4",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='cart'] [data-component='checkout-button']":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                      "[data-component='cart'] [data-component='checkout-button']:hover":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                    },
+                  },
+                });
+              }
+            })(document.currentScript);
+          </script>
+        </div>
+      </div>
 
-          if (!response.ok) throw new Error("Failed to create checkout: " + response.status);
-          const data = await response.json();
-          if (!data.checkout_id) throw new Error("Response did not contain a checkout_id");
+      <div class="grid-item">
+        <h4>Rye</h4>
+        <div class="sqs-block-content">
+          <script type="text/javascript">
+            (function (currentScript) {
+              window.BottleNexus ? BottleNexusInit() : loadScript();
+              function loadScript() {
+                var script = document.createElement("script");
+                script.async = true;
+                script.src =
+                  "https://buybutton.bottlenexus.com/buybutton.min.js?v=1717439338479";
+                (
+                  document.getElementsByTagName("head")[0] ||
+                  document.getElementsByTagName("body")[0]
+                ).appendChild(script);
+                script.onload = BottleNexusInit;
+              }
+              function BottleNexusInit() {
+                BottleNexus.init().createComponent({
+                  currentScript: currentScript,
+                  token: "b1ef889a-6b98-11ef-9e5f-0242ac110002",
+                  id: 8740,
+                  options: {
+                    iframe: false,
+                    layout: "basic",
+                    behavior: "sidebar",
+                    buttonRadius: "0",
+                    buttonFontSize: 16,
+                    buttonWidth: 300,
+                    buttonAlignment: "center",
+                    buttonText: "Buy Now",
+                    buttonTextColor: "#000000ff",
+                    buttonBackground: "#f5f5f5ff",
+                    initialQuantity: 1,
+                    cartButtonRadius: 0,
+                    cartCheckoutBackgroundColor: "#000000ff",
+                    cartCheckoutBackgroundDisabledColor: "#B2B2B2FF",
+                    cartCheckoutTextColor: "#FFFFFFFF",
+                    cartHeadingText: "Cart",
+                    cartCheckoutText: "Checkout",
+                    cartEmptyText: "No products added",
+                    cartAdditionalInformationText: "",
+                    cartBackgroundColor: "#FEFEFEFF",
+                    cartTextColor: "#000000FF",
+                    showInput: true,
+                    utm: {
+                      source: "BuyButton",
+                    },
+                    styles: {
+                      "[data-component='button']": {
+                        "background-color": "#f5f5f5",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='button']:hover": {
+                        "background-color": "#D7D5D4",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='cart'] [data-component='checkout-button']":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                      "[data-component='cart'] [data-component='checkout-button']:hover":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                    },
+                  },
+                });
+              }
+            })(document.currentScript);
+          </script>
+        </div>
+      </div>
 
-          console.log("Created new checkout:", data.checkout_id);
-          return data.checkout_id;
-        }
+      <div class="grid-item">
+        <h4>Silver Wax #388</h4>
+        <div class="sqs-block-content">
+          <script type="text/javascript">
+            (function (currentScript) {
+              window.BottleNexus ? BottleNexusInit() : loadScript();
+              function loadScript() {
+                var script = document.createElement("script");
+                script.async = true;
+                script.src =
+                  "https://buybutton.bottlenexus.com/buybutton.min.js?v=1717439338479";
+                (
+                  document.getElementsByTagName("head")[0] ||
+                  document.getElementsByTagName("body")[0]
+                ).appendChild(script);
+                script.onload = BottleNexusInit;
+              }
+              function BottleNexusInit() {
+                BottleNexus.init().createComponent({
+                  currentScript: currentScript,
+                  token: "b1ef889a-6b98-11ef-9e5f-0242ac110002",
+                  id: 8739,
+                  options: {
+                    iframe: false,
+                    layout: "basic",
+                    behavior: "sidebar",
+                    buttonRadius: "0",
+                    buttonFontSize: 16,
+                    buttonWidth: 300,
+                    buttonAlignment: "center",
+                    buttonText: "Buy Now",
+                    buttonTextColor: "#000000ff",
+                    buttonBackground: "#f5f5f5ff",
+                    initialQuantity: 1,
+                    cartButtonRadius: 0,
+                    cartCheckoutBackgroundColor: "#000000ff",
+                    cartCheckoutBackgroundDisabledColor: "#B2B2B2FF",
+                    cartCheckoutTextColor: "#FFFFFFFF",
+                    cartHeadingText: "Cart",
+                    cartCheckoutText: "Checkout",
+                    cartEmptyText: "No products added",
+                    cartAdditionalInformationText: "",
+                    cartBackgroundColor: "#FEFEFEFF",
+                    cartTextColor: "#000000FF",
+                    showInput: true,
+                    utm: {
+                      source: "BuyButton",
+                    },
+                    styles: {
+                      "[data-component='button']": {
+                        "background-color": "#f5f5f5",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='button']:hover": {
+                        "background-color": "#D7D5D4",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='cart'] [data-component='checkout-button']":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                      "[data-component='cart'] [data-component='checkout-button']:hover":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                    },
+                  },
+                });
+              }
+            })(document.currentScript);
+          </script>
+        </div>
+      </div>
 
-        async function createProduct(productId, quantity = 1, recurrence = "one-time") {
-          let checkoutId = localStorage.getItem("checkoutId");
+      <div class="grid-item">
+        <h4>Silver Wax #470</h4>
+        <div class="sqs-block-content">
+          <script type="text/javascript">
+            (function (currentScript) {
+              window.BottleNexus ? BottleNexusInit() : loadScript();
+              function loadScript() {
+                var script = document.createElement("script");
+                script.async = true;
+                script.src =
+                  "https://buybutton.bottlenexus.com/buybutton.min.js?v=1717439338479";
+                (
+                  document.getElementsByTagName("head")[0] ||
+                  document.getElementsByTagName("body")[0]
+                ).appendChild(script);
+                script.onload = BottleNexusInit;
+              }
+              function BottleNexusInit() {
+                BottleNexus.init().createComponent({
+                  currentScript: currentScript,
+                  token: "b1ef889a-6b98-11ef-9e5f-0242ac110002",
+                  id: 8738,
+                  options: {
+                    iframe: false,
+                    layout: "basic",
+                    behavior: "sidebar",
+                    buttonRadius: "0",
+                    buttonFontSize: 16,
+                    buttonWidth: 300,
+                    buttonAlignment: "center",
+                    buttonText: "Buy Now",
+                    buttonTextColor: "#000000ff",
+                    buttonBackground: "#f5f5f5ff",
+                    initialQuantity: 1,
+                    cartButtonRadius: 0,
+                    cartCheckoutBackgroundColor: "#000000ff",
+                    cartCheckoutBackgroundDisabledColor: "#B2B2B2FF",
+                    cartCheckoutTextColor: "#FFFFFFFF",
+                    cartHeadingText: "Cart",
+                    cartCheckoutText: "Checkout",
+                    cartEmptyText: "No products added",
+                    cartAdditionalInformationText: "",
+                    cartBackgroundColor: "#FEFEFEFF",
+                    cartTextColor: "#000000FF",
+                    showInput: true,
+                    utm: {
+                      source: "BuyButton",
+                    },
+                    styles: {
+                      "[data-component='button']": {
+                        "background-color": "#f5f5f5",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='button']:hover": {
+                        "background-color": "#D7D5D4",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='cart'] [data-component='checkout-button']":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                      "[data-component='cart'] [data-component='checkout-button']:hover":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                    },
+                  },
+                });
+              }
+            })(document.currentScript);
+          </script>
+        </div>
+      </div>
 
-          // Validate or create checkout session
-          if (!checkoutId || !(await validateCheckout(checkoutId))) {
-            checkoutId = await createCheckout();
-            localStorage.setItem("checkoutId", checkoutId);
-          }
+      <div class="grid-item">
+        <h4>Pot Luck</h4>
+        <div class="sqs-block-content">
+          <script type="text/javascript">
+            (function (currentScript) {
+              window.BottleNexus ? BottleNexusInit() : loadScript();
+              function loadScript() {
+                var script = document.createElement("script");
+                script.async = true;
+                script.src =
+                  "https://buybutton.bottlenexus.com/buybutton.min.js?v=1717439338479";
+                (
+                  document.getElementsByTagName("head")[0] ||
+                  document.getElementsByTagName("body")[0]
+                ).appendChild(script);
+                script.onload = BottleNexusInit;
+              }
+              function BottleNexusInit() {
+                BottleNexus.init().createComponent({
+                  currentScript: currentScript,
+                  token: "b1ef889a-6b98-11ef-9e5f-0242ac110002",
+                  id: 4385,
+                  options: {
+                    iframe: false,
+                    layout: "basic",
+                    behavior: "sidebar",
+                    buttonRadius: "0",
+                    buttonFontSize: 16,
+                    buttonWidth: 300,
+                    buttonAlignment: "center",
+                    buttonText: "Buy Now",
+                    buttonTextColor: "#000000ff",
+                    buttonBackground: "#f5f5f5ff",
+                    initialQuantity: 1,
+                    cartButtonRadius: 0,
+                    cartCheckoutBackgroundColor: "#000000ff",
+                    cartCheckoutBackgroundDisabledColor: "#B2B2B2FF",
+                    cartCheckoutTextColor: "#FFFFFFFF",
+                    cartHeadingText: "Cart",
+                    cartCheckoutText: "Checkout",
+                    cartEmptyText: "No products added",
+                    cartAdditionalInformationText: "",
+                    cartBackgroundColor: "#FEFEFEFF",
+                    cartTextColor: "#000000FF",
+                    showInput: true,
+                    utm: {
+                      source: "BuyButton",
+                    },
+                    styles: {
+                      "[data-component='button']": {
+                        "background-color": "#f5f5f5",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='button']:hover": {
+                        "background-color": "#D7D5D4",
+                        color: "black",
+                        "font-family": "orpheus-pro",
+                        padding: "19.2px 32.064px",
+                      },
+                      "[data-component='cart'] [data-component='checkout-button']":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                      "[data-component='cart'] [data-component='checkout-button']:hover":
+                        {
+                          "background-color": "#D7D5D4",
+                          color: "black",
+                          "font-family": "orpheus-pro",
+                          padding: "19.2px 32.064px",
+                        },
+                    },
+                  },
+                });
+              }
+            })(document.currentScript);
+          </script>
+        </div>
+      </div>
+    </div>
+  
+  
+  
+</body>
 
-          const payload = {
-            quantity,
-            recurrence,
-            engraving_lines: null,
-          };
-
-          const url = `${API_BASE}api/v1/checkout/${checkoutId}/${productId}/create/`;
-          const response = await fetch(url, {
-            method: "POST",
-            headers: await getHeaders(),
-            body: JSON.stringify(payload),
-          });
-
-          if (!response.ok) {
-            const errText = await response.text();
-            throw new Error(`Failed to add product: ${response.status} - ${errText}`);
-          }
-
-          const data = await response.json();
-          console.log("Product added:", data);
-          return { checkoutId, data };
-        }
-
-        async function handleCheckout() {
-          const productInput = document.getElementById("productId");
-          const productId = productInput.value.trim();
-          if (!productId) {
-            alert("Please enter a product ID.");
-            return;
-          }
-
-          try {
-            const { checkoutId } = await createProduct(productId, 1, "one-time");
-            const checkoutUrl = `${CHECKOUT_BASE}checkout/${checkoutId}/`;
-            console.log("Opening checkout:", checkoutUrl);
-            window.open(checkoutUrl, "_blank");
-          } catch (error) {
-            console.error("Checkout Error:", error);
-            alert("Error: " + error.message);
-          }
-        }
-
-        document.getElementById("checkoutBtn").addEventListener("click", handleCheckout);
-      })();
-    </script>
-  </body>
 </html>
