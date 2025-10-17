@@ -91,7 +91,7 @@
             engraving_lines: null, // Change if engraving details are needed.
           };
 
-          const url = API_BASE + `api/v1/buy-button/${checkoutId}/${productId}/create/`;
+          const url = API_BASE + `api/v1/checkout/${checkoutId}/${productId}/create/`;
           const response = await fetch(url, {
             method: "POST",
             mode: "cors",
